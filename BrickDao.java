@@ -1,6 +1,8 @@
-package com.bricks;
+package com.bricks.dao;
 
 import java.util.List;
+
+import com.bricks.model.BrickDO;
 
 public interface BrickDao {
 

@@ -1,11 +1,15 @@
-package com.bricks;
+package com.bricks.service;
 
 import java.util.List;
 
+import com.bricks.model.BrickDO;
+
+
 public interface BrickService  {
+	
 	long order(BrickDO brickDO);
 
-	BrickDO getAllOrderDetails(long orderNo);
+	BrickDO getOrderDetails(long orderNo);
 	
 	List<BrickDO> getAllOrderDetails();
 	

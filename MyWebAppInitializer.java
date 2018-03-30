@@ -1,4 +1,4 @@
-package com.bricks;
+package com.bricks.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

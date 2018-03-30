@@ -1,42 +1,62 @@
-package com.bricks;
+package com.bricks.dao;
 
 import java.util.List;
 
-import javax.sql.DataSource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.bricks.model.BrickDO;
+
+
+@Repository
+@Transactional
 public class BricksDaoImpl implements BrickDao {
+	
+	final static Logger logger = Logger.getLogger(BricksDaoImpl.class);
 
-	private JdbcTemplate template = null;
-
-	public void setDataSource(DataSource dataSource) {
-		this.template = new JdbcTemplate(dataSource);
-	}
-
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	@Override
 	public long order(BrickDO brickDO) {
-		// TODO Auto-generated method stub
-		int id = select max(order_id) fron bricks;
-		//table with name bricks
-		//columns  order_id, bricks_ordered, delivery_status
-		"insert into bricks (id+1, brickDO.getBricksOrdered(),'false' )"
-		return 0;
+		sessionFactory.getCurrentSession().save(brickDO);
+		logger.debug("Getting order id " + brickDO.getOrderId());
+	    return brickDO.getOrderId();
 	}
 
 	@Override
 	public BrickDO getOrderDetails(long orderNo) {
-		//select * from bricks where order_id = orderNo;
-		return null;
+		return sessionFactory.getCurrentSession().get(BrickDO.class, orderNo);
+		
 	}
 
 	@Override
 	public List<BrickDO> getAllOrderDetails() {
-		// select * from bricks where delivery_status = 'false'
-		return null;
+		  Session session = sessionFactory.getCurrentSession();
+	      CriteriaBuilder cb = session.getCriteriaBuilder();
+	      CriteriaQuery<BrickDO> cq = cb.createQuery(BrickDO.class);
+	      Root<BrickDO> root = cq.from(BrickDO.class);
+	      cq.select(root);
+	      Query<BrickDO> query = session.createQuery(cq);
+	      logger.debug("Getting getAllOrderDetails " + query.getResultList());
+	      return query.getResultList();
 	}
 
 	@Override
 	public BrickDO updateOrder(BrickDO brickDO) {
-		// update bricks set bricks_ordered = brickDO.getBricksOrdered() and order_id = brickDO.getOrderId();
+		BrickDO temp = sessionFactory.getCurrentSession().get(BrickDO.class,brickDO.getOrderId());
+		if(null!= temp){
+			return (BrickDO) sessionFactory.getCurrentSession().merge(brickDO.getOrderId());
+		}
 		return null;
 	}
 
