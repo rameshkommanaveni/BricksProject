@@ -23,7 +23,7 @@ public class ProfileServiceInit extends SpringBootServletInitializer {
 		final Logger log = LoggerFactory.getLogger(ProfileServiceInit.class);
 		if (StringUtils.isBlank(System.getProperty("spring.profiles.active"))) {
 
-			log.info("Missing spring.profiles.active setup, init with DEV config");
+			log.info("Missing spring.profiles.active setup, init with dev config");
 			System.setProperty("spring.profiles.active", "local");
 		}
 		SpringApplication.run(ProfileServiceInit.class, args);
