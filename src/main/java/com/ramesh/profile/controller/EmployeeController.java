@@ -20,12 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ramesh.profile.exception.ResourceNotFoundException;
 import com.ramesh.profile.model.Employee;
 import com.ramesh.profile.repository.EmployeeRepository;
+import com.ramesh.profile.service.KafkaProducerService;
 
 @RestController
 @RequestMapping(value = "/api/v1")
 public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
     @GetMapping(value = "/employees")
     public List < Employee > getAllEmployees() {
@@ -42,7 +46,9 @@ public class EmployeeController {
 
     @PostMapping(value = "/employees")
     public Employee createEmployee(@Valid @RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+        Employee createdEmployee = employeeRepository.save(employee);
+        kafkaProducerService.sendEmployeeEvent("EMPLOYEE_CREATED", createdEmployee);
+        return createdEmployee;
     }
 
     @PutMapping(value = "/employees/{id}")
@@ -55,6 +61,7 @@ public class EmployeeController {
         employee.setLastName(employeeDetails.getLastName());
         employee.setFirstName(employeeDetails.getFirstName());
         final Employee updatedEmployee = employeeRepository.save(employee);
+        kafkaProducerService.sendEmployeeEvent("EMPLOYEE_UPDATED", updatedEmployee);
         return ResponseEntity.ok(updatedEmployee);
     }
 
@@ -65,6 +72,7 @@ public class EmployeeController {
             .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 
         employeeRepository.delete(employee);
+        kafkaProducerService.sendEmployeeEvent("EMPLOYEE_DELETED", employee);
         Map < String, Boolean > response = new HashMap < > ();
         response.put("deleted", Boolean.TRUE);
         return response;
