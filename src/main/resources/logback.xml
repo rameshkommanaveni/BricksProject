@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <property resource="common-defaults.properties" />
+
+    <appender name="APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${logback.stdout.pattern}</pattern>
+        </layout>
+    </appender>
+
+    <appender name="APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logback.file.path}</file>
+        <encoder>
+            <pattern>${logback.file.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logback.file.path}.%i</fileNamePattern>
+            <MinIndex>${logback.rollingPolicy.min.index}</MinIndex>
+            <MaxIndex>${logback.rollingPolicy.max.index}</MaxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>${logback.triggeringPolicy.max.file.size}</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <root level="${root.log.level}">
+        <appender-ref ref="APPENDER" />
+    </root>
+</configuration>
