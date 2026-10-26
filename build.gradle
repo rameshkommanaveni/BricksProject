@@ -1,11 +1,10 @@
 plugins {
-    id 'java'
-	id 'war'
+	id 'java'
 	id 'org.springframework.boot' version "${springboot_version}"
 	id 'io.spring.dependency-management' version "${spring_dependency_version}"
 }
 
-group = 'com.ramesh'
+group = 'com.in28minutes.microservices'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -23,58 +22,78 @@ ext {
 }
 
 
-
-configurations {
-  runtime.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
-}
+//configurations {
+//	runtime.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+//}
 
 dependencies {
-
-	//Actuator
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-	//Kafka
-	implementation 'org.springframework.boot:spring-boot-starter-kafka'
-
-	//Eureka
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-	//DB dependencies
+	implementation 'org.springframework.boot:spring-boot-h2console'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2'
-
-	// Required for H2 Console with Spring Boot 4
-	implementation 'org.springframework.boot:spring-boot-h2console'
-
-	//Lombok
-	compileOnly 'org.projectlombok:lombok:1.18.42'
-	annotationProcessor 'org.projectlombok:lombok:1.18.42'
-	testCompileOnly 'org.projectlombok:lombok:1.18.42'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
-	implementation 'org.apache.commons:commons-lang3:3.20.0'
-
-	//logback
-	implementation 'ch.qos.logback:logback-classic:1.6.5'
-	implementation 'ch.qos.logback:logback-core:1.6.5'
-
-	implementation 'org.hibernate.orm:hibernate-core'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 
 
+
+
+
+	//implementation "org.springframework.kafka:spring-kafka:${kafka_version}"
+	//implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+
+	//implementation 'org.springframework.boot:spring-boot-starter-zipkin'
+
+	//implementation 'org.springframework.cloud:spring-cloud-config-server'
+	//implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	//implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+	//implementation 'org.springframework.boot:spring-data-rest-hal-explorer'
+
+
+
+	implementation 'mysql:mysql-connector-java:8.0.22'
+
+	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.3.0'
+	//implementation 'org.springframework.boot:spring-boot-starter-aop:4.0.0-M2'
 
 	//Swagger dependencies
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_version}"
 	implementation "io.springfox:springfox-core:${springfox_version}"
 	implementation "io.swagger:swagger-annotations:${swagger_version}"
 
-	//testing
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'junit:junit:4.12'
+	//implementation 'log4j:log4j:1.2.17'
+	implementation 'ch.qos.logback:logback-classic:1.6.5'
+	implementation 'ch.qos.logback:logback-core:1.6.5'
 
-	implementation 'javax:javaee-api:8.0.1'
-	
-	
+
+	//implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+
+	implementation 'org.mockito:mockito-all:1.10.5'
+
+	implementation 'javax.validation:validation-api:2.0.0.Final'
+
+	implementation 'com.zaxxer:HikariCP:2.4.5'
+
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	//runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-zipkin-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+
 }
-
 
 dependencyManagement {
 	imports {
@@ -82,43 +101,6 @@ dependencyManagement {
 	}
 }
 
-
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-tasks.named('wrapper') {
-	gradleVersion ="7.6.3"
-	distributionType = Wrapper.DistributionType.ALL
-	
-}
-
-war{
-enabled = false
-}
-
-springBoot{
-mainClass.set("com.ramesh.profile.ProfileServiceInit")
-}
-
-bootWar {
-enabled = true
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	destinationDirectory = project.layout.buildDirectory.dir('lib')
-	archiveFileName = "profileservice.war"
-
-}
-
-bootJar{
-destinationDirectory = project.layout.buildDirectory.dir('lib')
-}
-
-
-
-
-
-//implementation 'org.hibernate:hibernate-core:8.0.1'
-//implementation "org.hibernate.validator:hibernate-validator:${hibernate_version}"
-//annotationProcessor "org.hibernate:hibernate-validator-annotation-processor:${hibernate_version}"
-//implementation "org.hibernate:hibernate-entitymanager:${entitymanager_version}"
-//implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
