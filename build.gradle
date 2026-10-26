@@ -116,15 +116,6 @@ destinationDirectory = project.layout.buildDirectory.dir('lib')
 
 
 
-//developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//testImplementation 'org.springframework.kafka:spring-kafka-test'
-//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//implementation 'org.springframework.boot:spring-boot-starter-security'
-//implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-//implementation 'org.springframework.kafka:spring-kafka'
-//implementation 'org.springframework.boot:spring-boot-starter-kafka-test'
-//implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-
 
 //implementation 'org.hibernate:hibernate-core:8.0.1'
 //implementation "org.hibernate.validator:hibernate-validator:${hibernate_version}"
